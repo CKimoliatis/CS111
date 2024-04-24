@@ -1,17 +1,22 @@
-## UID: 123456789
+## UID: 806281561
 
 ## Pipe Up
 
-One sentence description
+A simulation of the Unix pipe "|"  written in C.
 
 ## Building
 
-Explain briefly how to build your program
+Run make and it will build the program with both the pipe executable and pipe.o output file.
 
 ## Running
 
-Show an example run of your program, using at least two additional arguments, and what to expect
+```bash
+./pipe ls cat wc 
+//will return a
+6   6   51
 
+./pipe ls 
+```
 ## Cleaning up
 
-Explain briefly how to clean up all binary files
+make clean will remove all binary files such as the pipe executable and pipe.o
