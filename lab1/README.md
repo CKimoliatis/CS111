@@ -12,11 +12,11 @@ Run make and it will build the program with both the pipe executable and pipe.o 
 
 ```bash
 ./pipe ls cat wc 
-//will return a
-6   6   51
+//will return:
+    6   6   51
 
 ./pipe ls 
 ```
 ## Cleaning up
 
-make clean will remove all binary files such as the pipe executable and pipe.o
+make clean will remove all binary files such as the pipe executable, pipe.o, and the __pycache__ directory

@@ -14,12 +14,14 @@ int main(int argc, char *argv[]) {
             return errno;
         }
         int ret = fork();
+        errno = 0;
         if (ret < 0) {
             perror("Error forking process");
             return errno;
         }
         if (ret == 0) {  // Child process
             if (prev_fds[0] != -1) {
+                errno = 0;
                 if (dup2(prev_fds[0], STDIN_FILENO) == -1) {
                     perror("dup2 error");
                     return errno;
@@ -28,6 +30,7 @@ int main(int argc, char *argv[]) {
                 close(prev_fds[1]);
             }
             if (i < argc - 1) {
+                errno = 0;
                 if (dup2(fds[1], STDOUT_FILENO) == -1) {
                     perror("dup2 error 2");
                     return errno;
@@ -35,6 +38,7 @@ int main(int argc, char *argv[]) {
             }
             close(fds[0]);
             close(fds[1]);
+            errno = 0;
             if (execlp(argv[i], argv[i], (char *)NULL) == -1) {
                 perror("Error with execlp");
                 return errno;

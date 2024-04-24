@@ -10,4 +10,4 @@ pipe: ${OBJS}
 	
 .PHONY: clean
 clean:
-	rm -f ${OBJS} pipe
+	rm -fd ${OBJS} pipe __pycache__/* __pycache__
