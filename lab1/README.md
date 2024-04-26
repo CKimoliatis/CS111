@@ -15,7 +15,15 @@ Run make and it will build the program with both the pipe executable and pipe.o 
 //will return:
     6   6   51
 
-./pipe ls 
+./pipe ls sort uniq 
+will return:
+cs111@cs111 CS111/lab1 (main %) » ./pipe ls sort uniq 
+Makefile
+pipe
+pipe.c
+pipe.o
+README.md
+test_lab1.py
 ```
 ## Cleaning up
 
