@@ -7,6 +7,13 @@
 
 int main(int argc, char *argv[]) {
     int fds[2], prev_fds[2] = {-1, -1};
+
+    if(argc < 2) {
+        errno = EINVAL;
+        perror("Invalid Argument");
+        return errno;
+    }
+
     for (int i = 1; i < argc; i++) {
         errno = 0;
         if (pipe(fds) == -1) {
@@ -19,7 +26,7 @@ int main(int argc, char *argv[]) {
             perror("Error forking process");
             return errno;
         }
-        if (ret == 0) {  // Child process
+        if (ret == 0) { 
             if (prev_fds[0] != -1) {
                 errno = 0;
                 if (dup2(prev_fds[0], STDIN_FILENO) == -1) {
@@ -43,7 +50,7 @@ int main(int argc, char *argv[]) {
                 perror("Error with execlp");
                 return errno;
             }
-        } else { // Parent process
+        } else {
             if (prev_fds[0] != -1) {
                 close(prev_fds[0]);
                 close(prev_fds[1]);
