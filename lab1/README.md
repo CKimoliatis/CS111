@@ -8,8 +8,6 @@ A simulation of the Unix pipe "|"  written in C.
 
 Enter make into the terminal and it will build the program with both the pipe executable and pipe.o output file.
 
-if not gcc -o pipe.c pipe will also do the same thing 
-
 ## Running
 
 ```bash
