@@ -18,10 +18,12 @@ struct process
   u32 arrival_time;
   u32 burst_time;
 
-  TAILQ_ENTRY(process) pointers;
+  TAILQ_ENTRY(process)
+  pointers;
 
   /* Additional fields here */
   u32 response_time;
+  bool inQ;
   /* End of "Additional fields here" */
 };
 
@@ -142,15 +144,18 @@ void init_processes(const char *path,
   close(fd);
 }
 
-struct process *pop_head(struct process_list *list) {
+struct process *pop_head(struct process_list *list)
+{
   struct process *item = TAILQ_FIRST(list);
-  if (item != NULL) {
+  if (item != NULL)
+  {
     TAILQ_REMOVE(list, item, pointers);
   }
   return item;
 }
 
-void insert_tail(struct process_list *list, struct process *proc) {
+void insert_tail(struct process_list *list, struct process *proc)
+{
   TAILQ_INSERT_TAIL(list, proc, pointers);
 }
 
@@ -180,36 +185,57 @@ int main(int argc, char *argv[])
   u32 total_arrive_time = 0;
   struct process *curr_proc;
 
-  while(num_processes_complete < size){
-    for(u32 i = 0; i < size; i++){
-      if(data[i].arrival_time == curr_time){
+  for (u32 i = 0; i < size; i++)
+  {
+    total_arrive_time += data[i].arrival_time;
+    total_waiting_time_deductions += data[i].arrival_time + data[i].burst_time;
+  }
+
+  while (num_processes_complete < size)
+  {
+    for (u32 i = 0; i < size; i++)
+    {
+      if (data[i].arrival_time == curr_time && !data[i].inQ)
+      {
+        data[i].inQ = true;
         insert_tail(&list, &data[i]);
-        total_arrive_time += data[i].arrival_time;
-        total_waiting_time_deductions += data[i].arrival_time + data[i].burst_time;
       }
     }
-    if(cnt == 0){
+    if (cnt == 0)
+    {
       curr_proc = pop_head(&list);
-      if (curr_proc != NULL && curr_proc->response_time == 0) {
+      if (curr_proc != NULL && curr_proc->response_time == 0)
+      {
         curr_proc->response_time = 1;
         total_response_time += curr_time;
       }
     }
-    if(curr_proc != NULL){
+    curr_time++;
+    for (u32 i = 0; i < size; i++)
+    {
+      if (data[i].arrival_time == curr_time && !data[i].inQ)
+      {
+        data[i].inQ = true;
+        insert_tail(&list, &data[i]);
+      }
+    }
+    if (curr_proc != NULL)
+    {
       cnt++;
       curr_proc->burst_time--;
 
-      if(curr_proc->burst_time == 0){
-        cnt=0;
+      if (curr_proc->burst_time == 0)
+      {
+        cnt = 0;
         num_processes_complete++;
-        total_waiting_time += curr_time+1;
-      }else if(cnt == quantum_length){
+        total_waiting_time += curr_time;
+      }
+      else if (cnt == quantum_length)
+      {
         insert_tail(&list, curr_proc);
         cnt = 0;
       }
     }
-    curr_time++;
-    
   }
   total_waiting_time -= total_waiting_time_deductions;
   total_response_time -= total_arrive_time;
